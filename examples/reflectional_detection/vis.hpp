@@ -79,36 +79,67 @@ void keyboard_callback (const pcl::visualization::KeyboardEvent &event, void *co
     visState->updateDisplay_ = true;
     
     // Change segmentation stage displayed
-    if (key == "KP_1")
+    //if (key == "KP_1")
+    if (key == "a")    
+    {
       visState->cloudDisplay_ = VisState::CLOUD;
-    else if (key == "KP_2")
+      std::cout << key << std::endl;
+    }
+    //else if (key == "KP_2")
+    else if (key == "s")    
+    {
+      std::cout << key << std::endl;    
       visState->cloudDisplay_ = VisState::REFLECTIONAL_SYMMETRIES;
-        
+    } 
     // Iterators
     else if (key == "Left")
+    {
+      std::cout << key << std::endl;    
       visState->segIterator_--;
+    }      
     else if (key == "Right")
+    {
+      std::cout << key << std::endl;    
       visState->segIterator_++;
-    
+    }
     else if (key == "Down")
+    {
+      std::cout << key << std::endl;    
       visState->instanceIdIt_--;
+    }  
     else if (key == "Up")
+    {
+      std::cout << key << std::endl;    
       visState->instanceIdIt_++;
-
+    }
     // Point size
     else if (key == "KP_Add")
+    {
+      std::cout << key << std::endl;    
       visState->pointSize_ += 1.0;
+    }
     else if (key == "KP_Subtract")
+    {
+      std::cout << key << std::endl;    
       visState->pointSize_ = std::max(1.0, visState->pointSize_ - 1.0);    
+    }  
         
     // Additional display
     else if ((key == "n") || (key == "N"))
+    {
+      std::cout << key << std::endl;    
       visState->showNormals_ = !visState->showNormals_;
+    }
     else if ((key == "m") || (key == "M"))
+    {
+      std::cout << key << std::endl;    
       visState->showSymmetry_ = !visState->showSymmetry_;
+    }
     else if ((key == "Shift_L") || (key == "comma"))
+    {
+      std::cout << key << std::endl;    
       visState->showReconstructedCloud_ = !visState->showReconstructedCloud_;    
-        
+    }    
     else
       visState->updateDisplay_ = false;
   }

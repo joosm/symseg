@@ -33,6 +33,7 @@
 // PCL
 #include <pcl/io/ply_io.h>
 #include <pcl/common/time.h>
+#include <pcl/search/impl/search.hpp>
 
 // Utilities includes
 #include "filesystem/filesystem.hpp"

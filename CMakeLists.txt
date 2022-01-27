@@ -59,7 +59,8 @@ endif()
 ### OctoMap
 ### ----------------------------------------------------------------------------
 
-find_package(octomap 1.8.0 REQUIRED)
+find_package(octomap 1.8.0 REQUIRED PATHS /home/joosm/Workplace/octomap)
+#find_package(octomap REQUIRED)
 message (STATUS "")
 if (octomap_FOUND)
   message (STATUS " ---------------------------")
@@ -76,7 +77,7 @@ link_libraries(${OCTOMAP_LIBRARIES})
 ### EDT3D
 ### ----------------------------------------------------------------------------
 
-find_package(dynamicEDT3D REQUIRED)
+find_package(dynamicEDT3D REQUIRED PATHS /home/joosm/Workplace/dynamicEDT3D)
 message (STATUS "")
 if (dynamicEDT3D_FOUND)
   message (STATUS " ---------------------------")
@@ -94,6 +95,7 @@ link_libraries(${DYNAMICEDT3D_LIBRARIES})
 ### ----------------------------------------------------------------------------
 
 include(FindProtobuf)
+#find_package(Protobuf REQUIRED PATHS /home/joosm/Workplace/protobuf)
 find_package(Protobuf REQUIRED)
 message (STATUS "")
 if (PROTOBUF_FOUND)
@@ -118,6 +120,7 @@ set (includes ./utilities
               ${CMAKE_BINARY_DIR}/proto)  # This is required to make sure header files above can find header files generated for protos.
 include_directories (${includes})
 
+
 ### ----------------------------------------------------------------------------
 ### C++11 support
 ### ----------------------------------------------------------------------------
@@ -125,10 +128,14 @@ include_directories (${includes})
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+
+message("${COMPILER_SUPPORTS_CXX11} ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_COMPILER} message 0")
 if(COMPILER_SUPPORTS_CXX11)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  message(COMPILER_SUPPORTS_CXX11 "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_COMPILER} message 1")
 elseif(COMPILER_SUPPORTS_CXX0X)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+  message(COMPILER_SUPPORTS_CXX0X " message 2")
 else()
   message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()

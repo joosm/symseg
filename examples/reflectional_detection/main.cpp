@@ -33,6 +33,7 @@
 // PCL
 #include <pcl/io/ply_io.h>
 #include <pcl/common/time.h>
+#include <pcl/search/impl/search.hpp>
 
 // Utilities includes
 #include "filesystem/filesystem.hpp"
@@ -55,7 +56,7 @@ typedef pcl::PointXYZRGBNormal PointNC;
 void parseCommandLine(int argc, char** argv, std::string &inputCloudPath, std::string &outputDirnamePath, bool &visualize)
 {
   inputCloudPath = "";
-  outputDirnamePath = "";
+  outputDirnamePath = "./";
   visualize = true;
   
   // Check parameters
@@ -85,8 +86,9 @@ int main(int argc, char** argv)
   // Parse command line
   //----------------------------------------------------------------------------
   
-  std::string inputCloudPath, outputDirnamePath;
+  std::string inputCloudPath, outputDirnamePath, sceneDirname;
   bool visualize;
+
   parseCommandLine(argc, argv, inputCloudPath, outputDirnamePath, visualize);
 
   //----------------------------------------------------------------------------
@@ -120,9 +122,9 @@ int main(int argc, char** argv)
   
   // Reflectional symmetry detection parameters
   sym::ReflSymDetectParams reflDetParams(options.reflectional_symmetry_detection_options());
-  reflDetParams.voxel_size                  = options.voxel_size() * 2;   // Voxel size used in voxelgrid downsample.  
+  reflDetParams.voxel_size                  = options.voxel_size() * 1.0;   // Voxel size used in voxelgrid downsample.  
   reflDetParams.max_correspondence_reflected_distance =                   // Maximum allowed distance between the reflections of two points forming a symmetric 
-                                        reflDetParams.voxel_size / 2;
+                                        reflDetParams.voxel_size / 1.0;
     
   //----------------------------------------------------------------------------
   // Load data.
@@ -234,17 +236,21 @@ int main(int argc, char** argv)
   }
   
   // // Save timing information to a file.
-  // std::ofstream outfile;
-  // outfile.open("./reflectional_segmentation_timings.txt", std::ios_base::app);
-  // outfile << utl::getBasename(sceneDirname) << ": " << execution_time << "\n";
+  std::ofstream outfile;
+  sceneDirname = "./";
+  outfile.open("./reflectional_segmentation_timings.txt", std::ios_base::app);
+  outfile << utl::getBasename(sceneDirname) << ": " << execution_time << "\n";
   
   //----------------------------------------------------------------------------
   // Visualization.
   //----------------------------------------------------------------------------
 
   if (!visualize)
-    return 0;
-    
+      return 0;
+  //{
+  //  std::cout << "visualization is off" << std::endl; 
+  //  return 0;
+  //}  
   //Print instructions
   std::cout << "-------------------------------" << std::endl;
   std::cout << "|   Visualization controls    |" << std::endl;
@@ -297,10 +303,11 @@ int main(int argc, char** argv)
 
           // Show symmetry
           if (visState.showSymmetry_)
-            sym::showCloudReflectionalSymmetry<PointNC>(visualizer, sceneCloud, reflSymmetry[symId], "symmetry", 1.0);
+            sym::showCloudReflectionalSymmetry<PointNC>(visualizer, sceneCloud, reflSymmetry[symId], "symmetry", 3.0, utl::red);
           
           if (visState.showReconstructedCloud_) {
             pcl::PointCloud<PointNC>::Ptr sceneCloudReflected  (new pcl::PointCloud<PointNC>);
+            std::cout << "symId: " << symId << " " << std::endl;
             reflSymmetry[symId].reflectCloud(*sceneCloud, *sceneCloudReflected);
             utl::showPointCloud<PointNC>(visualizer, sceneCloudReflected, "cloud_reflected", visState.pointSize_, utl::blue);
           }
